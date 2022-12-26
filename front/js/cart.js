@@ -263,12 +263,50 @@ function deleteProduct(){
     searchRegExp5(email)
   })
   // regex 
-
   
-if (prenom, nom, ville, adresse, email){
+if (prenom == ""|| nom == ""|| ville == ""|| adresse == ""|| email == ""){
+  alert("Veuillez renseigner tous les champs du formulaire")
+}
+else if(kanapAray === null || kanapAray == 0){
+  alert("Votre panier est vide.");
+  window.location.href = "index.html";
+}
+else if(confirm("Confirmez votre commande") == true) {
+  let kanapAray = []
+  for (let i = 0; i < kanapAray.length; i++){
+    kanapObject.push(kanapAray[i].id);
+  }
 
-}
-else{
-  var errChamps="Veuillez vérifier que tous les champs sont bien rempli.";
-        alert(errChamps);
-}
+  let order = {
+    contact: {
+      firstName: prenom.value,
+      lastName: nom.value,
+      address: adresse.value,
+      city: ville.value,
+      email: email.value
+    },
+    products: cartItem
+};
+  const options = {
+    method: 'POST',
+    body: JSON.stringify(order),
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+  };
+  fetch(postUrl, options)
+      .then(res => res.json())
+      .then(datas => {
+        console.log(datas);
+
+        localStorage.clear();
+
+        // SECURE ORDER ID, EXPORT TO URL
+       // window.location.href = "confirmation.html?orderId=" + datas.orderId;
+
+      })
+      .catch(error => {
+        alert(error);
+      })
+  }
