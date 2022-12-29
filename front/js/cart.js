@@ -4,8 +4,9 @@ let totalPrice = document.querySelector("#totalPrice");
 let htmlContent = "";
 let tPrix = 0;
 let tQuantite = 0;
-let kanapAray = []
-
+let kanapAray = [];
+let postUrl = 'http://localhost:3000/api/products/order';
+let idAray = [];
 function getLocalStorage(){
   let cart = JSON.parse(localStorage.getItem('cart'));
   if (cart === null) {
@@ -58,43 +59,13 @@ function recapPanier() {
 }
 recapPanier()
 
-/*function Modif(){
-input.addEventListener('change', function recapPanier(){
-    const el = document.querySelector('cart__item__content__settings__quantity');
-    el.dataset.quantite === 'kanapObject.quantite'
-  })
-}
-*/
-/*function modif(action, itemID, qty) {
-  const itemInCart = cart.find(el => el._id == itemID);
-  if (action === 'update') itemInCart.qty = qty;
-  if (action === 'delete') cart.splice(cart.indexOf(itemInCart), 1);
-  localStorage.setItem('Cart', JSON.stringify(cart));
-}*/
 // modifier quantité
 
 function modifier(){
-/*cartItem.addEventListener('input', e => {
-  if (e.target.classList.contains('itemQuantity')) {*/
-      //ciblage des produits
-      /*const id = e.target.closest('.cart__item').dataset.id;
-      const product = kanapObject.Get(id);*/
-      /*const produitData = dataPanier.find((produit) => produit.addId == addId);
-      produitData.quantité = Number(newValue);
-      //update DOM
-      const newQty = e.target.valueAsNumber;
-      product.qty = newQty;
-      e.target.previousElementSibling.textContent = 'Qté : ' + newQty;
-      renderTotals();
-      //update produits local storage
-      updateLocalStorage('update', id, newQty);
-  }
-})*/
 let qttPanier = document.querySelectorAll(".itemQuantity");
 console.log(qttPanier, "quantité")
 qttPanier.forEach((qtt) => {
   qtt.addEventListener('change', (eq) => {
-    //let cart = JSON.parse(localStorage.getItem("panierStocké"));
     eq.preventDefault();
       let slct_article = eq.target.closest('.cart__item');
       let id = slct_article.dataset.id;
@@ -116,23 +87,6 @@ qttPanier.forEach((qtt) => {
   );
 });
 }
-/*function updateArticleQuantity(addId, newValue) {
-  const produitData = dataPanier.find((produit) => produit.addId == addId);
-  produitData.quantité = Number(newValue);
-  localStorage.setItem(addId, JSON.stringify(produitData));
-
-  let refId = produitData.addId;
-  let refColor = produitData.color;
-  let newId = refId.slice(0, 32);
-
-  const spanPrice = document.querySelector("#totalPrice");
-  const total = dataPrice.reduce((total, price) => total + price, 0);
-  console.log("find data price", total);
-  spanPrice.innerHTML = total;
-  window.location.reload(true);
-
-  recapPanier();
-}*/
 //************Gestion du bouton supprimer************//
 
 //selection des références des boutons 
@@ -178,72 +132,64 @@ function deleteProduct(){
 
   //formulaire
 
-  function formulaire(){
-    let contactClient = {};
-
-    /*// on pointe les élément qui ont la classe .regex_texte
-    var regexTexte = document.querySelectorAll(".regex_texte");
-    // modification du type de l'input type email à text à cause d'un comportement de l'espace blanc non voulu vis à vis de la regex 
-    document.querySelector("#email").setAttribute("type", "text");*/
-  }
   var prenom = document.querySelector("#firstName");
   function searchRegExp1(prenom) {
+    let errMsgFName = document.getElementById('firstNameErrorMsg');
     var Fname = prenom.value
-    //var exp=new RegExp(prenom, "g");
     let regexLettres = /^[a-záàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{1,31}$/i;
     if ( regexLettres.test(Fname) ) {
       console.log("Le mot ["+Fname+"] a été trouvé :)"); 
     } else {
-      console.log("E R R E U R  !\nLe mot ["+Fname+"] n'est pas présent !!!!"); 
+      errMsgFName.innerHTML = "E R R E U R  !\nLe mot ["+Fname+"] n'est pas présent !!!!"; 
     }
   }
 
   var nom = document.querySelector("#lastName");
   function searchRegExp2(nom) {
+    let errMsgName = document.getElementById('lastNameErrorMsg');
     var Lname = nom.value
-    //var exp=new RegExp(prenom, "g");
     let regexChfrLtrs = /^[a-z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{1,60}$/i;
     if ( regexChfrLtrs.test(Lname) ) {
       console.log("Le mot ["+Lname+"] a été trouvé :)"); 
     } else {
-      console.log("E R R E U R  !\nLe mot ["+Lname+"] n'est pas présent !!!!"); 
+      errMsgName.innerHTML = "E R R E U R  !\nLe mot ["+Lname+"] n'est pas présent !!!!"; 
     }
   }
 
   var ville = document.querySelector("#city");
   function searchRegExp3(ville) {
+    let errMsgCity = document.getElementById('cityErrorMsg');
     var ville = ville.value
-    //var exp=new RegExp(prenom, "g");
     let regexChfrLtrs = /^[a-z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{1,60}$/i;
     if ( regexChfrLtrs.test(ville) ) {
       console.log("Le mot ["+ville+"] a été trouvé :)"); 
     } else {
-      console.log("E R R E U R  !\nLe mot ["+ville+"] n'est pas présent !!!!"); 
+      errMsgCity.innerHTML = "E R R E U R  !\nLe mot ["+ville+"] n'est pas présent !!!!"; 
     }
   }
 
   var adresse = document.querySelector("#address");
   function searchRegExp4(adresse) {
+    let errMsgAddress = document.getElementById('addressErrorMsg');
     var adresse = adresse.value
-    //var exp=new RegExp(prenom, "g");
     let regexChfrLtrs = /^[a-z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœ\s-]{1,60}$/i;
     if ( regexChfrLtrs.test(adresse) ) {
       console.log("Le mot ["+adresse+"] a été trouvé :)"); 
     } else {
-      console.log("E R R E U R  !\nLe mot ["+adresse+"] n'est pas présent !!!!"); 
+      errMsgAddress.innerHTML = "E R R E U R  !\nLe mot ["+adresse+"] n'est pas présent !!!!"; 
     }
   }
 
   var email = document.querySelector("#email");
   function searchRegExp5(email) {
     var email = email.value
-    //var exp=new RegExp(prenom, "g");
+    let errMsgEmail = document.getElementById('emailErrorMsg');
     let regexValidEmail = /^[a-z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]{1,60}$/i;
     let regexMatchEmail = /^[a-zA-Z0-9æœ.!#$%&’*+/=?^_`{|}~"(),:;<>@[\]-]+@([\w-]+\.)+[\w-]{2,4}$/i;
     if ( regexValidEmail, regexMatchEmail.test(email) ) {
       console.log("Le mot ["+email+"] a été trouvé :)"); 
     } else {
-      console.log("E R R E U R  !\nLe mot ["+email+"] n'est pas présent !!!!"); 
+      errMsgEmail.innerHTML = "E R R E U R  !\nLe mot ["+email+"] n'est pas présent !!!!"
     }
   }
 
@@ -263,18 +209,18 @@ function deleteProduct(){
     searchRegExp5(email)
   })
   // regex 
-  
-if (prenom == ""|| nom == ""|| ville == ""|| adresse == ""|| email == ""){
+  function commander(){
+if (prenom.value == ""|| nom.value == ""|| ville.value == ""|| adresse.value == ""|| email.value == ""){
   alert("Veuillez renseigner tous les champs du formulaire")
 }
-else if(kanapAray === null || kanapAray == 0){
+else if(kanapAray === null || kanapAray.length == 0){
   alert("Votre panier est vide.");
   window.location.href = "index.html";
 }
 else if(confirm("Confirmez votre commande") == true) {
   let kanapAray = []
   for (let i = 0; i < kanapAray.length; i++){
-    kanapObject.push(kanapAray[i].id);
+    idAray.push(kanapAray[i].id);
   }
 
   let order = {
@@ -285,7 +231,7 @@ else if(confirm("Confirmez votre commande") == true) {
       city: ville.value,
       email: email.value
     },
-    products: cartItem
+    products: idAray
 };
   const options = {
     method: 'POST',
@@ -303,10 +249,18 @@ else if(confirm("Confirmez votre commande") == true) {
         localStorage.clear();
 
         // SECURE ORDER ID, EXPORT TO URL
-       // window.location.href = "confirmation.html?orderId=" + datas.orderId;
+       window.location.href = "confirmation.html?orderId=" + datas.orderId;
 
       })
       .catch(error => {
         alert(error);
       })
   }
+  }
+  let getOrder = document.getElementById('order')
+  getOrder.addEventListener('click', e => {
+    e.preventDefault();
+    commander()
+
+  })
+  
